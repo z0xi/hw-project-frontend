@@ -21,7 +21,9 @@
             <h3>DID:<span class="asset-discription">{{ o.did }}</span></h3>
             <h3>Name:<span class="asset-discription">{{ o.name }}</span></h3>
             <h3>Request:<span class="asset-discription"></span></h3>
-            <h5><span class="asset-discription">{{ o.request }}</span></h5>
+            <el-col v-for="(x, y) in o.request">
+              <h4>{{x.name}}:<span class="asset-discription">{{ x.value}}</span></h4>
+            </el-col>
           </div>
           <div class="bottom clearfix">
 <!--            <el-button-->
@@ -42,11 +44,24 @@
             <el-button
               type="primary"
               class="button"
-              @click="buyAsset(o.id)"
-            >使用该服务</el-button
+              @click="showDialog(o.request)"
+            >创建声明</el-button
             >
           </div>
         </div>
+        <!-- Form -->
+        <el-dialog title="创建申明" :visible.sync="dialogFormVisible">
+          <el-form :model="form">
+            <el-form-item v-for="(x, index) in claim" label-width="100px">
+                <span slot="label">{{x.name}}:</span>
+                <el-input v-model=x.value></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="createClaim(o.id)">请求服务</el-button>
+          </div>
+        </el-dialog>
       </el-card>
     </el-col>
   </el-row>
@@ -54,7 +69,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
+import { requestLocalService } from '@/api/user'
 export default {
   name: 'Servicelist',
   data() {
@@ -64,11 +79,19 @@ export default {
           did: "did:dns:example.com",
           name: "HUAWEI",
           url: "https://dam.whh.pw//api/asset/valid?id=example.com",
-          request: "Subject:Computer Science",
+          request: [
+            {
+              name: 'university',
+              value: 'JNU'
+            }
+          ]
         }
       ],
+      dialogFormVisible: false,
+      claim: [],
+      formLabelWidth: '120px',
       demoImgUrl:
-        "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fp5.itc.cn%2Fimages01%2F20210506%2Fa8181137567e4fe99e49cf34fc968387.jpeg&refer=http%3A%2F%2Fp5.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1651634552&t=a3d21b8e08faa20460acac5311874469",
+        'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fp5.itc.cn%2Fimages01%2F20210506%2Fa8181137567e4fe99e49cf34fc968387.jpeg&refer=http%3A%2F%2Fp5.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1651634552&t=a3d21b8e08faa20460acac5311874469' ,
       options: [{
         value: '选项1',
         label: '证书1'
@@ -88,11 +111,27 @@ export default {
       'name'
     ])
   },
+  created() {
+    this.getServiceList();
+  },
   methods: {
-    getIPFS(hash) {
-      var ipfsAddr = 'https://ipfs.io/ipfs/' + hash
-      console.log(ipfsAddr)
-      window.open(ipfsAddr)
+    showDialog(param){
+      this.form = param
+      this.dialogFormVisible = true
+      console.log(this.claim)
+    },
+    getServiceList(hash) {
+      // this.entities.request.push({
+      //   name: 'age',
+      //   value: '22'
+      // });
+      this.claim = this.entities[0].request;
+    },
+    createClaim(index) {
+      requestLocalService(this.form).then(response => {
+        console.log(response)
+      })
+      this.dialogFormVisible = false
     }
   }
 }

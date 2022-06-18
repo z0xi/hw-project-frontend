@@ -31,10 +31,21 @@ export function getTest() {
   })
 }
 
-export function picupload(params) {
+export function requestLocalUpload(params) {
   return request({
-    url: '/picupload',
+    url: '/localRequestUpload',
     method: 'post',
+    data: params
+  })
+}
+
+export function requestLocalService(params) {
+  return request({
+    url: '/localRequestService',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
     data: params
   })
 }

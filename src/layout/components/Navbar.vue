@@ -41,7 +41,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { getTest, picupload } from '@/api/user'
+import { getTest, requestLocalUpload } from '@/api/user'
 export default {
   computed: {
     ...mapGetters([
@@ -64,10 +64,10 @@ export default {
       let formData = new FormData() // FormData对象，添加参数只能通过append('key', value)的形式添加
       // formData.append("id", this.tid); //添加id（这里是项目需要，根据个人情况选择是否添加）
       formData.append('credential', param.file) // 添加文件对象
-      picupload(formData).then(response => {
+      requestLocalUpload(formData).then(response => {
         console.log(response)
       })
-      this.fileList = [];
+      this.fileList = []
     },
     handleRemove(file, fileList) {
       this.$message.warning('文件已移除')
