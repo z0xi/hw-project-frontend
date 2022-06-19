@@ -33,7 +33,7 @@
 <!--              icon="el-icon-search"-->
 <!--            >IPFS</el-button-->
 <!--            >-->
-            <el-select v-model="value" placeholder="请选择">
+            <el-select v-model="value" @click.native="selectCert()" placeholder="请选择">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -70,16 +70,22 @@
 <script>
 import { mapGetters } from 'vuex'
 import { requestLocalService } from '@/api/user'
+import { getCertList,requestRemoteService } from '@/api/user-remote'
+
 export default {
   name: 'Servicelist',
   data() {
     return {
       entities: [
         {
-          did: "did:dns:example.com",
-          name: "HUAWEI",
-          url: "https://dam.whh.pw//api/asset/valid?id=example.com",
+          did: 'did:dns:example.com',
+          name: 'HUAWEI',
+          url: 'https://dam.whh.pw//api/asset/valid?id=example.com',
           request: [
+            {
+              name: 'university',
+              value: 'JNU'
+            },
             {
               name: 'university',
               value: 'JNU'
@@ -112,23 +118,59 @@ export default {
     ])
   },
   created() {
-    this.getServiceList();
+    this.getServiceList()
   },
   methods: {
-    showDialog(param){
-      this.form = param
+    showDialog(param) {
+      let data = param
+      this.claim = data
       this.dialogFormVisible = true
       console.log(this.claim)
     },
-    getServiceList(hash) {
-      // this.entities.request.push({
-      //   name: 'age',
-      //   value: '22'
-      // });
-      this.claim = this.entities[0].request;
+    selectCert(){
+      console.log(111);
+      getCertList().then(response => {
+          console.log(response)
+          this.options = [];
+          let obj = response.payload;
+          for (let k in obj){
+            var opt ={
+              label:'',
+              value:''
+            }
+            opt.label = obj.certID;
+            opt.value = obj[k];
+            console.log(k)
+            console.log(  obj[k])
+            this.certDatail.push(attr);
+          }
+        })
+    },
+    getServiceList() {
+      this.entities.push(
+        {
+          did: 'did:dns:example.com',
+          name: 'HUAWEI',
+          url: 'https://dam.whh.pw//api/asset/valid?id=example.com',
+          request: [
+            {
+              name: 'university',
+              value: 'JNU'
+            }
+          ]
+        })
+      this.claim = this.entities[0].request
     },
     createClaim(index) {
-      requestLocalService(this.form).then(response => {
+      console.log(this.claim)
+      let param = new FormData();
+//序列化对象数组
+      let Obj = JSON.stringify(this.claim);
+      param.append('objects', Obj);
+      requestLocalService(param).then(response => {
+        console.log(response)
+      })
+      requestRemoteService().then(response => {
         console.log(response)
       })
       this.dialogFormVisible = false

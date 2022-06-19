@@ -36,23 +36,23 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    // https://blog.csdn.net/qq_42374233/article/details/118379549配置两个后端服务
-    // proxy: {
-    //   [process.env.VUE_APP_BASE_API]: {
-    //     target: 'http://localhost:8080', // 跨域要访问的地址及端口，这里是访问本地服务的代理
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       ['^' + process.env.VUE_APP_BASE_API]: ''
-    //     }
-    //   },
-    //   [process.env.VUE_REMOTE_BASE_API]: {
-    //     target: 'http://192.168.95.139:8080', // 跨域要访问的地址及端口，这里是访问远程服务的代理
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       ['^' + process.env.VUE_REMOTE_BASE_API]: ''
-    //     }
-    //   }
-    // },
+    // https://blog.csdn.net/Liu_yunzhao/article/details/90520028?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-4.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-4.nonecase配置两个后端服务
+    proxy: {
+      '/local': {
+        target: `http://192.168.95.139:8081`, // 跨域要访问的地址及端口，这里是访问本地服务的代理
+        changeOrigin: true,
+        pathRewrite: {
+          '^/local': ''
+        }
+      },
+      '/remote': {
+        target: 'http://192.168.95.139:8080', // 跨域要访问的地址及端口，这里是访问远程服务的代理
+        changeOrigin: true,
+        pathRewrite: {
+          '^/remote': ''
+        }
+      }
+    },
     before: require('./mock/mock-server.js')
   },
   configureWebpack: {

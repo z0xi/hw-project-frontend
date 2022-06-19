@@ -43,9 +43,9 @@ export function requestLocalService(params) {
   return request({
     url: '/localRequestService',
     method: 'post',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    // headers: {
+    //   'Content-Type': 'application/json'
+    // },
     data: params
   })
 }

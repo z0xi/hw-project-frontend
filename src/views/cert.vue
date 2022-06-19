@@ -8,11 +8,6 @@
     >
       <el-table-column fixed prop="did" label="所有者DID"> </el-table-column>
       <el-table-column prop="name" label="证书ID"> </el-table-column>
-      <el-table-column label="证书状态">
-        <template slot-scope="scope">{{
-            scope.row.ipfs == null ? "无效" : "有效"
-          }}</template>
-      </el-table-column>
       <el-table-column prop="operate" label="操作">
         <template slot-scope="scope">
           <el-button
@@ -20,14 +15,23 @@
             class="button"
             icon="el-icon-search"
             size="mini"
-            v-if="canOperate(scope)"
             @click="handleIPFS(scope)"
-          >查看IPFS</el-button
+          >查看证书</el-button
           >
         </template>
       </el-table-column>
     </el-table>
-
+    <el-dialog title="链上证书详情" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
+        <el-form-item v-for="(x, index) in certDatail" label-width="100px">
+          <span slot="label">{{x.name}}:</span>
+          <el-input v-model=x.value :disabled="true"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
     <Footer></Footer>
   </div>
 
@@ -35,6 +39,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { getCertList } from '@/api/user-remote'
 
 export default {
   name: 'Certlist',
@@ -42,15 +47,21 @@ export default {
     return {
       tableData: [
         {
-          did: "did:dns:example.com",
-          name: "domain example.com",
-          url: "https://dam.whh.pw//api/asset/valid?id=example.com",
+          did: 'did:dns:example.com',
+          name: 'domain example.com',
+          url: 'https://dam.whh.pw//api/asset/valid?id=example.com',
           // ipfs: "QmTaq2X243Wn3vAydoEjPHeFccLBYGYR9LEuYcnN7CQDKv",
-          ipfs: null,
-          address: null,
         },
+        {
+          did: 'did:dns:example.com',
+          name: 'domain example.com',
+          url: 'https://dam.whh.pw//api/asset/valid?id=example.com',
+          // ipfs: "QmTaq2X243Wn3vAydoEjPHeFccLBYGYR9LEuYcnN7CQDKv",
+        }
       ],
-    };
+      certDatail: [],
+      dialogFormVisible: false
+    }
   },
 
   computed: {
@@ -58,7 +69,15 @@ export default {
       'name'
     ])
   },
+  created() {
+    // this.getList()
+  },
   methods: {
+    getList() {
+      getCertList().then(response => {
+        console.log(response)
+      })
+    },
     canOperate(scope) {
       console.log(scope.row.ipfs);
       return scope.row.ipfs == null;
@@ -72,10 +91,21 @@ export default {
       }
     },
     handleIPFS(scope) {
+      this.dialogFormVisible= true;
       console.log(scope.row);
-      var ipfsAddr = 'https://ipfs.io/ipfs/' + scope.row.ipfs
-      console.log(ipfsAddr)
-      window.open(ipfsAddr)
+      this.certDatail = [];
+      let obj = scope.row;
+      for (let k in obj){
+        var attr ={
+          name:'',
+          value:''
+        }
+        attr.name = k;
+        attr.value = obj[k];
+        console.log(k)
+        console.log(  obj[k])
+        this.certDatail.push(attr);
+      }
     }
   }
 }

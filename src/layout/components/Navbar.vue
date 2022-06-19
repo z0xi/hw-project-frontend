@@ -26,7 +26,7 @@
         class="upload-demo"
         action=""
         style="margin:10px; float: right"
-        accept=".md"
+        accept=".json"
         :on-remove="handleRemove"
         :http-request="upload"
         :limit="1"
@@ -42,6 +42,8 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { getTest, requestLocalUpload } from '@/api/user'
+import { requestRemoteUpload } from '@/api/user-remote'
+
 export default {
   computed: {
     ...mapGetters([
@@ -53,7 +55,8 @@ export default {
   },
   data() {
     return {
-      fileList: []
+      fileList: [],
+      userID: '001'
     }
   },
   methods: {
@@ -65,6 +68,9 @@ export default {
       // formData.append("id", this.tid); //添加id（这里是项目需要，根据个人情况选择是否添加）
       formData.append('credential', param.file) // 添加文件对象
       requestLocalUpload(formData).then(response => {
+        console.log(response)
+      })
+      requestRemoteUpload(this.userID).then(response => {
         console.log(response)
       })
       this.fileList = []
