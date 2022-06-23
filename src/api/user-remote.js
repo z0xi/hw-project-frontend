@@ -4,7 +4,7 @@ import request from '@/utils/request-remote'
 
 export function getCertList() {
   return request({
-    url: '/queryAll',
+    url: '/myca/queryAll',
     method: 'get'
   })
 }
@@ -20,13 +20,20 @@ export function requestRemoteUpload(params) {
   return request({
     url: '/myca/upload',
     method: 'get'
-    // id: params
+    // data: params
   })
 }
 
 export function requestRemoteService() {
   return request({
     url: '/myca/verify',
-    method: 'put'
+    method: 'get'
+  })
+}
+
+export function deleteCert(params) {
+  return request({
+    url: '/myca/' + params,
+    method: 'delete'
   })
 }

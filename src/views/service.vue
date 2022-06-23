@@ -7,7 +7,6 @@
       v-else
       :span="8"
       v-for="(o, index) in entities"
-      :key="service"
       class="card-col"
     >
       <el-card style="border-radius: 25px">
@@ -18,27 +17,37 @@
         </el-image>
         <div style="padding: 10px">
           <div style="text-align: left; overflow: hidden">
-            <h3>DID:<span class="asset-discription">{{ o.did }}</span></h3>
-            <h3>Name:<span class="asset-discription">{{ o.name }}</span></h3>
-            <h3>Request:<span class="asset-discription"></span></h3>
-            <el-col v-for="(x, y) in o.request">
-              <h4>{{x.name}}:<span class="asset-discription">{{ x.value}}</span></h4>
-            </el-col>
+            <h3>Service ID:<span class="asset-discription">{{ o.did }}</span></h3>
+            <h3>Service Name:<span class="asset-discription">{{ o.name }}</span></h3>
+            <h3>Request Attribute Set:<span class="asset-discription">
+              <el-button
+                type="info"
+                size="small"
+                class="button"
+                icon="el-icon-search"
+                @click="showRequest(o.request)"
+              >查看要求</el-button>
+            </span>
+            </h3>
+<!--            <el-col v-for="(x, y) in o.request">-->
+<!--              <h4>{{x.name}}:<span class="asset-discription">{{ x.value}}</span></h4>-->
+<!--            </el-col>-->
+            <el-dialog title="查看需要" :visible.sync="requestDialogVisible">
+              <el-form>
+                <el-form-item v-for="(z, aaindex) in o.request" label-width="100px">
+                  <span slot="label">{{z.name}}:</span>
+                  <el-input v-model=z.value></el-input>
+                </el-form-item>
+              </el-form>
+            </el-dialog>
           </div>
           <div class="bottom clearfix">
-<!--            <el-button-->
-<!--              type="success"-->
-<!--              class="button"-->
-<!--              @click.native="getIPFS(o.ipfs)"-->
-<!--              icon="el-icon-search"-->
-<!--            >IPFS</el-button-->
-<!--            >-->
-            <el-select v-model="value" @click.native="selectCert()" placeholder="请选择">
+            <el-select v-model="selectCertID[index]" @click.native="selectCert()" placeholder="请选择">
               <el-option
                 v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                :key="item.key"
+                :label="item.key"
+                :value="item.key">
               </el-option>
             </el-select>
             <el-button
@@ -51,8 +60,8 @@
         </div>
         <!-- Form -->
         <el-dialog title="创建申明" :visible.sync="dialogFormVisible">
-          <el-form :model="form">
-            <el-form-item v-for="(x, index) in claim" label-width="100px">
+          <el-form>
+            <el-form-item v-for="(x, bbindex) in claim" label-width="100px">
                 <span slot="label">{{x.name}}:</span>
                 <el-input v-model=x.value></el-input>
             </el-form-item>
@@ -87,28 +96,20 @@ export default {
               value: 'JNU'
             },
             {
-              name: 'university',
-              value: 'JNU'
+              name: 'age',
+              value: '18'
             }
           ]
         }
       ],
       dialogFormVisible: false,
+      requestDialogVisible: false,
       claim: [],
       formLabelWidth: '120px',
       demoImgUrl:
         'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fp5.itc.cn%2Fimages01%2F20210506%2Fa8181137567e4fe99e49cf34fc968387.jpeg&refer=http%3A%2F%2Fp5.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1651634552&t=a3d21b8e08faa20460acac5311874469' ,
-      options: [{
-        value: '选项1',
-        label: '证书1'
-      }, {
-        value: '选项2',
-        label: '证书2'
-      }, {
-        value: '选项3',
-        label: '证书3'
-      }],
-      value: ''
+      options: [],
+      selectCertID: []
     }
   },
 
@@ -127,24 +128,18 @@ export default {
       this.dialogFormVisible = true
       console.log(this.claim)
     },
-    selectCert(){
-      console.log(111);
+    showRequest(param) {
+      this.requestDialogVisible = true
+    },
+    selectCert() {
       getCertList().then(response => {
-          console.log(response)
-          this.options = [];
-          let obj = response.payload;
-          for (let k in obj){
-            var opt ={
-              label:'',
-              value:''
-            }
-            opt.label = obj.certID;
-            opt.value = obj[k];
-            console.log(k)
-            console.log(  obj[k])
-            this.certDatail.push(attr);
-          }
-        })
+        console.log(response)
+        this.selectCertID = []
+        this.options = response.payload.resultList
+        for (const i in this.options) {
+          this.selectCertID.push('')
+        }
+      })
     },
     getServiceList() {
       this.entities.push(
@@ -164,7 +159,7 @@ export default {
     createClaim(index) {
       console.log(this.claim)
       let param = new FormData();
-//序列化对象数组
+      // 序列化对象数组
       let Obj = JSON.stringify(this.claim);
       param.append('objects', Obj);
       requestLocalService(param).then(response => {

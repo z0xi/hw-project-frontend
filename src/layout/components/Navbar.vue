@@ -70,8 +70,16 @@ export default {
       requestLocalUpload(formData).then(response => {
         console.log(response)
       })
-      requestRemoteUpload(this.userID).then(response => {
+      let idData = new FormData() // FormData对象，添加参数只能通过append('key', value)的形式添加
+      // formData.append("id", this.tid); //添加id（这里是项目需要，根据个人情况选择是否添加）
+      idData.append('id', this.userID) // 添加文件对象
+      requestRemoteUpload(idData).then(response => {
         console.log(response)
+      })
+      this.$notify({
+        title: '提示',
+        message: '证书验证中，请稍后查看证书列表',
+        duration: 0
       })
       this.fileList = []
     },
