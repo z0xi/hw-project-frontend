@@ -4,7 +4,6 @@
     <el-table
       :data="tableData"
       style="margin-left: 20%; width: 80%"
-      height="250"
     >
       <!--      <el-table-column fixed prop="userid" label="所有者DID"> </el-table-column>-->
       <el-table-column prop="key" label="证书ID" />

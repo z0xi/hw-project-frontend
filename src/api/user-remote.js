@@ -9,9 +9,9 @@ export function getCertList() {
   })
 }
 
-export function getServiceList() {
+export function queryServiceList() {
   return request({
-    url: '/queryAll',
+    url: '/myca/queryServiceList',
     method: 'get'
   })
 }
@@ -24,16 +24,17 @@ export function requestRemoteUpload(params) {
   })
 }
 
-export function requestRemoteService() {
+export function requestRemoteService(params) {
   return request({
     url: '/myca/verify',
-    method: 'get'
+    method: 'post',
+    data: params
   })
 }
 
 export function deleteCert(params) {
   return request({
-    url: '/myca/' + params,
+    url: '/myca/deleteCert/' + params,
     method: 'delete'
   })
 }
