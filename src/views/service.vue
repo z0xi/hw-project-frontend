@@ -32,7 +32,7 @@
                 <span>ServiceID:</span>
               </div>
               <div class="item_desr">
-                <span>{{ o.verify.severid }}</span>
+                <span>{{ o.verify.serverid }}</span>
               </div>
             </div>
             <div class="text item">
@@ -40,7 +40,7 @@
                 <span>ServiceName:</span>
               </div>
               <div class="item_desr">
-                <span>{{ o.verify.sever }}</span>
+                <span>{{ o.verify.server }}</span>
               </div>
             </div>
             <div class="text item" >
