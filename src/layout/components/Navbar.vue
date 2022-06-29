@@ -17,7 +17,7 @@
           alt=""
           style="height: 55px; width: 55px"
         >
-        Oracle-Demo
+        Oracle
       </el-menu-item>
       <el-menu-item index="/certlist">CertificateList</el-menu-item>
       <el-menu-item index="/servicelist">ServiceList</el-menu-item>
@@ -25,7 +25,7 @@
         ref="uploadplan"
         class="upload-demo"
         action=""
-        style="margin:10px; float: right"
+        style="margin:15px; float: left;margin-left: 600px"
         accept=".json"
         :on-remove="handleRemove"
         :http-request="upload"
@@ -33,7 +33,7 @@
         :file-list="fileList"
       >
 <!--        https://blog.csdn.net/zyynb/article/details/123223064-->
-        <el-button size="small" type="primary">上传证书</el-button>
+        <el-button size="small" type="primary">Upload Certificate</el-button>
       </el-upload>
     </el-menu>
   </div>

@@ -11,7 +11,7 @@
       class="card-col"
     >
       <el-card style="border-radius: 25px">
-        <el-image :src="demoImgUrl">
+        <el-image :src="demoImgUrl[serviceindex]" style="width: 360px; height: 200px;border-radius: 10px">
           <div slot="error" class="image-slot">
             <i class="el-icon-picture-outline" />
           </div>
@@ -23,8 +23,8 @@
                 <span>Status:</span>
               </div>
               <div class="item_desr">
-                <el-tag size="mini" v-if="o.verify.state=='1'" type="success" effect="dark">已授权</el-tag>
-                <el-tag size="mini" v-else type="info" effect="dark">未授权</el-tag>
+                <el-tag size="mini" v-if="o.verify.state=='1'" type="success" effect="dark">Authorized</el-tag>
+                <el-tag size="mini" v-else type="info" effect="dark">Unauthorized</el-tag>
               </div>
             </div>
             <div class="text item">
@@ -54,12 +54,12 @@
                   class="button"
                   icon="el-icon-search"
                   @click="showRequest(o.verify.properties)"
-                >查看要求</el-button>
+                >Show</el-button>
               </div>
             </div>
             <div class="text item">
               <div class="slecter">
-                <el-select size="medium" v-model="selectCertID[serviceindex]" placeholder="请选择" @click.native="selectCert(serviceindex)">
+                <el-select size="medium" v-model="selectCertID[serviceindex]" placeholder="Select Cert" @click.native="selectCert(serviceindex)">
                   <el-option
                     v-for="item in options"
                     :key="item.key"
@@ -74,10 +74,10 @@
                   size="medium"
                   class="button"
                   @click="showDialog(o,serviceindex)"
-                >创建声明</el-button>
+                >Create Claim</el-button>
               </div>
             </div>
-            <el-dialog title="创建申明" :visible.sync="dialogFormVisible">
+            <el-dialog title="Create Claim" :visible.sync="dialogFormVisible">
               <el-form>
                 <el-form-item v-for="(key, index) in Object.keys(claim)" :key="index" label-width="100px">
                   <span slot="label">{{ key }}</span>
@@ -85,11 +85,11 @@
                 </el-form-item>
               </el-form>
               <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click.native="createClaim(serviceindex)">请求服务</el-button>
+                <el-button @click="dialogFormVisible = false">Cancel</el-button>
+                <el-button type="primary" @click.native="createClaim(serviceindex)">Request Service</el-button>
               </div>
             </el-dialog>
-            <el-dialog title="查看需要" :visible.sync="requestDialogVisible">
+            <el-dialog title="Requested Attribute Set" :visible.sync="requestDialogVisible">
               <el-form>
                 <el-form-item v-for="(key, rindex) in Object.keys(requestedClaim)" :key="rindex" label-width="100px">
                   <span slot="label">{{ key }}</span>
@@ -121,7 +121,10 @@ export default {
       claim: {},
       formLabelWidth: '120px',
       demoImgUrl:
-        'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fp5.itc.cn%2Fimages01%2F20210506%2Fa8181137567e4fe99e49cf34fc968387.jpeg&refer=http%3A%2F%2Fp5.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1651634552&t=a3d21b8e08faa20460acac5311874469',
+      ['https://zyss.eduour.cn/Uploads/Images/Content/catid1/2018-08/5b7a348beb7fd.png',
+        'https://ts1.cn.mm.bing.net/th/id/R-C.fa538277af392f7b916bc16e88fcfa09?rik=WDrDCzk25Gao5Q&riu=http%3a%2f%2fimg1.mydrivers.com%2fimg%2f20200308%2f32a1fadb342045d69c0104dd8eae9eef.jpg&ehk=hYhoq%2fuK%2fd9qjTrM718Llb0RUa%2bUzy8w2Lv2tNqiAgA%3d&risl=&pid=ImgRaw&r=0',
+        'https://zyss.eduour.cn/Uploads/Images/Content/catid1/2018-08/5b7a348beb7fd.png',
+        'https://zyss.eduour.cn/Uploads/Images/Content/catid1/2018-08/5b7a348beb7fd.png'],
       options: [],
       selectCertID: [1, 2, 3, 4],
       claimCertID: ''
@@ -220,7 +223,7 @@ export default {
 
 <style lang="scss" scoped>
 .item {
-  margin-bottom: 5px;
+  margin: 10px;
 }
 .item_tag{
   float:left;
@@ -233,16 +236,16 @@ export default {
 }
 
 .item_desr{
-  //margin-left: 40%;
-  min-height: 20px;
-  text-align:right;
+  margin-left: 40%;
+  //min-height: 10px;
+  text-align:center;
   font-family: "Times New Roman";
 
   color:#008080;
 }
 .text {
   width: 100%;
-  font-size: 18px;
+  font-size: 20px;
   font-family: "Serif";
   color: #000c21;
 }

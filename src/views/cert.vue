@@ -15,13 +15,13 @@
             icon="el-icon-search"
             size="mini"
             @click="selectCert(scope)"
-          >查看证书</el-button>
+          >Show</el-button>
           <el-button
             type="danger"
             class="button"
             size="mini"
             @click="deleteCert(scope)"
-          >删除证书</el-button>
+          >Delete</el-button>
         </template>
       </el-table-column>
     </el-table>
